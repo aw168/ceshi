@@ -1,4 +1,4 @@
-name: Copy Joe-Revised Theme from awbk to ceshi
+name: Copy Joe Theme from awbk to ceshi
 
 # 触发条件：手动触发
 on:
@@ -20,6 +20,7 @@ jobs:
         with:
           repository: aw168/awbk
           path: source_awbk
+          ref: main
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }} # 需要在 ceshi 仓库中配置名为 PERSONAL_ACCESS_TOKEN 的 Secret
 
       # 2. 检出目标仓库（ceshi）
@@ -28,15 +29,16 @@ jobs:
         with:
           repository: aw168/ceshi
           path: target_ceshi
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }} # 同样使用 ceshi 仓库中的 PERSONAL_ACCESS_TOKEN
+          ref: main
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }} # 同样使用 PERSONAL_ACCESS_TOKEN
 
-      # 3. 复制 Joe-Revised 主题文件
-      - name: Copy Joe-Revised theme files
+      # 3. 复制 Joe 主题文件
+      - name: Copy Joe theme files
         run: |
           # 创建目标目录（如果不存在）
-          mkdir -p target_ceshi/usr/themes/Joe-Revised
-          # 复制源仓库中 Joe-Revised 目录下的所有内容到目标仓库的 Joe-Revised 目录
-          cp -r source_awbk/usr/themes/Joe-Revised/* target_ceshi/usr/themes/Joe-Revised/
+          mkdir -p target_ceshi/usr/themes/Joe
+          # 复制源仓库 awbk 中 Joe 目录下的所有内容到目标仓库 ceshi 的 Joe 目录
+          cp -r source_awbk/usr/themes/Joe/* target_ceshi/usr/themes/Joe/
 
       # 4. 提交更改到目标仓库（ceshi）
       - name: Commit and push changes to ceshi
@@ -44,6 +46,6 @@ jobs:
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git add usr/themes/Joe-Revised
-          git commit -m "Add Joe-Revised theme files from awbk"
+          git add usr/themes/Joe
+          git commit -m "Copy Joe theme from awbk"
           git push
