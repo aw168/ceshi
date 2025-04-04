@@ -1,0 +1,101 @@
+/* 昼夜模式专用css */
+/* 使用 light-dark() 函数统一管理配色 */
+:root {
+	color-scheme: light dark;
+
+	/* 主题色保持独立，可单独修改 */
+	/* --theme: light-dark(#409eff, #6a80e3); */
+	--theme: #409eff;
+
+	/* 基础配色 */
+	--background: light-dark(#fff, #323335);
+	--background-grey: #f5f5f5;
+	--body-bg-color: light-dark(#f5f6f7, #292a2d);
+	--back-trn-85: light-dark(rgba(255, 255, 255, 0.85), rgba(35, 35, 35, 0.85));
+	--back-trn-75: light-dark(rgba(255, 255, 255, 0.75), rgba(35, 35, 35, 0.75));
+	--back-trn-6: light-dark(rgba(255, 255, 255, 0.6), rgba(35, 35, 35, 0.6));
+	--float-btn-bg: light-dark(rgba(200, 200, 200, 0.4), rgba(70, 70, 70, 0.4));
+
+	/* 文字颜色 */
+	--main: light-dark(#303133, #b4b6bb);
+	--routine: light-dark(#606266, #888);
+	--minor: light-dark(#909399, #777);
+	--seat: light-dark(#c0c4cc, #666);
+
+	/* 灰度层级 */
+	--classA: light-dark(#dcdfe6, #515253);
+	--classB: light-dark(#e4e7ed, #454545);
+	--classC: light-dark(#ebeef5, #414243);
+	--classD: light-dark(#f2f6fc, #303030);
+
+	/* 渐变系统 */
+	--back-line-right: linear-gradient(to right, var(--theme), #6a80e3);
+
+	/* 阴影系统 */
+	--text-shadow: light-dark(0 1px 2px rgba(0, 0, 0, 0.25), none);
+	--box-shadow: light-dark(0px 0px 20px -5px rgba(158, 158, 158, 0.22), none);
+	--main-shadow: light-dark(rgba(116, 116, 116, 0.08), rgba(24, 24, 24, 0.1));
+
+	/* 扩展配色 */
+	--main-bg-color: light-dark(#fff, #323335);
+	--key-color: light-dark(#333, var(--main));
+	--main-color: light-dark(#4e5358, var(--main));
+	--muted-color: light-dark(#777, #b4b6bb);
+	--muted-2-color: light-dark(#999, #888a8f);
+	--muted-3-color: light-dark(#b1b1b1, #636469);
+	--muted-border-color: light-dark(rgba(0, 0, 0, 0.03), rgba(184, 184, 184, 0.02));
+	--blur-bg: light-dark(#ffffff, rgba(50, 51, 53, 0.8));
+
+	/* 公共样式 */
+	--radius-wrap: 8px;
+	--radius-inner: 3.5px;
+	--main-radius: var(--radius-inner);
+	--main-border-color: light-dark(rgba(50, 50, 50, 0.06), rgba(114, 114, 114, 0.1));
+	--transition: 0.1s;
+}
+
+/* 强制所有元素继承颜色方案 */
+* {
+	color-scheme: inherit;
+}
+
+/* 深色模式下的网页背景颜色及文本颜色 */
+/* 此处用于修改黑夜模式下没有覆盖到的小地方的样式 */
+/* 保留需要切换的图片样式 */
+body.dark-theme .joe_header__above-logo>.light,
+body.dark-theme .footer .footer-logo>.light {
+	display: none;
+}
+
+body.dark-theme .joe_header__above-logo>.dark,
+body.dark-theme .footer .footer-logo>.dark {
+	display: block;
+}
+
+/* 保留特殊元素样式 */
+body.dark-theme .joe_detail__article blockquote {
+	background: var(--classD);
+	color: var(--routine);
+	border-color: var(--classA);
+}
+
+body.dark-theme .joe_detail__article code:not([class]) {
+	background: #fdf0ec38;
+	color: #a6aba8;
+}
+
+body.dark-theme .joe_detail__article-anote {
+	color: #ffffff9c;
+}
+
+body.dark-theme .joe_detail__article-abtn {
+	color: #ffffff9c;
+}
+
+body.dark-theme .joe_detail__overdue-wrapper {
+	background: var(--classD);
+}
+
+body.dark-theme .joe_list>li {
+	background: var(--background);
+}
