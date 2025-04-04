@@ -1,18 +1,8 @@
-name: Unzip Typecho to Root
+name: Copy Joe-Revised Theme from awbk to ceshi
 
-# 触发条件：手动触发或当推送包含 typecho.zip 文件时
+# 触发条件：手动触发
 on:
   workflow_dispatch:
-    inputs:
-      zip_filename:
-        description: '要解压的 ZIP 文件名 (默认为 typecho.zip)'
-        required: true
-        default: 'typecho.zip'
-  push:
-    branches:
-      - main # 当推送到 main 分支时触发
-    paths:
-      - 'typecho.zip' # 只有当推送包含 typecho.zip 文件时才触发
 
 # 权限设置
 permissions:
@@ -20,43 +10,40 @@ permissions:
   actions: read
 
 jobs:
-  unzip:
+  copy-theme:
     runs-on: ubuntu-latest
+
     steps:
-      # 1. 检出仓库
-      - name: Checkout repository
+      # 1. 检出源仓库（awbk）
+      - name: Checkout source repository (awbk)
         uses: actions/checkout@v3
         with:
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }} # 使用名为 PERSONAL_ACCESS_TOKEN 的 Secret
+          repository: aw168/awbk
+          path: source_awbk
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }} # 需要在 ceshi 仓库中配置名为 PERSONAL_ACCESS_TOKEN 的 Secret
 
-      # 2. 设置 up Python (用于 unzip 命令)
-      - name: Set up Python
-        uses: actions/setup-python@v3
+      # 2. 检出目标仓库（ceshi）
+      - name: Checkout target repository (ceshi)
+        uses: actions/checkout@v3
         with:
-          python-version: '3.x'
+          repository: aw168/ceshi
+          path: target_ceshi
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }} # 同样使用 ceshi 仓库中的 PERSONAL_ACCESS_TOKEN
 
-      # 3. 安装 unzip 工具
-      - name: Install unzip
-        run: sudo apt-get update && sudo apt-get install -y unzip
+      # 3. 复制 Joe-Revised 主题文件
+      - name: Copy Joe-Revised theme files
+        run: |
+          # 创建目标目录（如果不存在）
+          mkdir -p target_ceshi/usr/themes/Joe-Revised
+          # 复制源仓库中 Joe-Revised 目录下的所有内容到目标仓库的 Joe-Revised 目录
+          cp -r source_awbk/usr/themes/Joe-Revised/* target_ceshi/usr/themes/Joe-Revised/
 
-      # 4. 解压文件到根目录
-      - name: Unzip files to root
-        run: unzip -o "${{ github.event.inputs.zip_filename }}" -d .
-
-      # 5. 删除 ZIP 文件 (可选)
-      - name: Remove zip file
-        run: rm "${{ github.event.inputs.zip_filename }}"
-
-      # 6. 配置 Git User
-      - name: Configure Git User
+      # 4. 提交更改到目标仓库（ceshi）
+      - name: Commit and push changes to ceshi
+        working-directory: target_ceshi
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-
-      # 7. 添加和提交更改
-      - name: Add and Commit Changes
-        run: git add . && git commit -m "Unzip ${{ github.event.inputs.zip_filename }} files to root"
-
-      # 8. 推送更改
-      - name: Push Changes
-        run: git push
+          git add usr/themes/Joe-Revised
+          git commit -m "Add Joe-Revised theme files from awbk"
+          git push
